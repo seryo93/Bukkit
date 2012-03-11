@@ -495,4 +495,136 @@ public enum Material {
     public boolean isRecord() {
         return id >= GOLD_RECORD.id && id <= RECORD_11.id;
     }
+
+   public static void addMaterial(int var0) {
+      addMaterial(var0, "X" + String.valueOf(var0));
+   }
+
+   public static void addMaterial(int var0, String var1) {
+      if(byId[var0] == null) {
+         System.out.println("Adding Material: " + var0 + ":" + var1);
+         Material var2 = (Material)addEnum(Material.class, var1, new Class[]{Integer.TYPE}, new Object[]{Integer.valueOf(var0)});
+         byId[var0] = var2;
+         BY_NAME.put(var1, var2);
+         String var3 = var1.toUpperCase().trim();
+         var3 = var3.replaceAll("\\s+", "_").replaceAll("\\W", "");
+         BY_NAME.put(var3, var2);
+      }
+
+   }
+
+   public static void setMaterialName(int var0, String var1) {
+      String var2 = var1.toUpperCase().trim();
+      var2 = var2.replaceAll("\\s+", "_").replaceAll("\\W", "");
+      if(byId[var0] == null) {
+         System.out.println("Adding material " + var0 + " name: " + var1);
+         addMaterial(var0, var2);
+      } else {
+         System.out.println("Aliasing material " + var0 + " name: " + var1);
+         Material var3 = getMaterial(var0);
+         BY_NAME.put(var1, var3);
+         BY_NAME.put(var2, var3);
+      }
+
+   }
+
+   private static void setup() {
+      if(!isSetup) {
+         try {
+            Method var0 = Class.forName("sun.reflect.ReflectionFactory").getDeclaredMethod("getReflectionFactory", new Class[0]);
+            reflectionFactory = var0.invoke((Object)null, new Object[0]);
+            newConstructorAccessor = Class.forName("sun.reflect.ReflectionFactory").getDeclaredMethod("newConstructorAccessor", new Class[]{Constructor.class});
+            newInstance = Class.forName("sun.reflect.ConstructorAccessor").getDeclaredMethod("newInstance", new Class[]{Object[].class});
+            newFieldAccessor = Class.forName("sun.reflect.ReflectionFactory").getDeclaredMethod("newFieldAccessor", new Class[]{Field.class, Boolean.TYPE});
+            fieldAccessorSet = Class.forName("sun.reflect.FieldAccessor").getDeclaredMethod("set", new Class[]{Object.class, Object.class});
+         } catch (Exception var1) {
+            var1.printStackTrace();
+         }
+
+         isSetup = true;
+      }
+   }
+
+   private static Object getConstructorAccessor(Class var0, Class[] var1) throws Exception {
+      Class[] var2 = null;
+      var2 = new Class[var1.length + 2];
+      var2[0] = String.class;
+      var2[1] = Integer.TYPE;
+      System.arraycopy(var1, 0, var2, 2, var1.length);
+      return newConstructorAccessor.invoke(reflectionFactory, new Object[]{var0.getDeclaredConstructor(var2)});
+   }
+
+   private static Enum makeEnum(Class var0, String var1, int var2, Class[] var3, Object[] var4) throws Exception {
+      Object[] var5 = null;
+      var5 = new Object[var4.length + 2];
+      var5[0] = var1;
+      var5[1] = Integer.valueOf(var2);
+      System.arraycopy(var4, 0, var5, 2, var4.length);
+      return (Enum)var0.cast(newInstance.invoke(getConstructorAccessor(var0, var3), new Object[]{var5}));
+   }
+
+   private static void setFailsafeFieldValue(Field var0, Object var1, Object var2) throws Exception {
+      var0.setAccessible(true);
+      Field var3 = Field.class.getDeclaredField("modifiers");
+      var3.setAccessible(true);
+      var3.setInt(var0, var0.getModifiers() & -17);
+      Object var4 = newFieldAccessor.invoke(reflectionFactory, new Object[]{var0, Boolean.valueOf(false)});
+      fieldAccessorSet.invoke(var4, new Object[]{var1, var2});
+   }
+
+   private static void blankField(Class var0, String var1) throws Exception {
+      Field[] var2 = Class.class.getDeclaredFields();
+      int var3 = var2.length;
+
+      for(int var4 = 0; var4 < var3; ++var4) {
+         Field var5 = var2[var4];
+         if(var5.getName().contains(var1)) {
+            var5.setAccessible(true);
+            setFailsafeFieldValue(var5, var0, (Object)null);
+            break;
+         }
+      }
+
+   }
+
+   private static void cleanEnumCache(Class var0) throws Exception {
+      blankField(var0, "enumConstantDirectory");
+      blankField(var0, "enumConstants");
+   }
+
+   public static Enum addEnum(Class var0, String var1, Class[] var2, Object[] var3) {
+      if(!isSetup) {
+         setup();
+      }
+
+      Field var4 = null;
+      Field[] var5 = var0.getDeclaredFields();
+      short var6 = 4122;
+      String var7 = String.format("[L%s;", new Object[]{var0.getName()});
+      Field[] var8 = var5;
+      int var9 = var5.length;
+
+      for(int var10 = 0; var10 < var9; ++var10) {
+         Field var11 = var8[var10];
+         if((var11.getModifiers() & var6) == var6 && var11.getType().getName().equals(var7)) {
+            var4 = var11;
+            break;
+         }
+      }
+
+      var4.setAccessible(true);
+
+      try {
+         Enum[] var13 = (Enum[])((Enum[])var4.get(var0));
+         ArrayList var14 = new ArrayList(Arrays.asList(var13));
+         Enum var15 = makeEnum(var0, var1, var14.size(), var2, var3);
+         var14.add(var15);
+         setFailsafeFieldValue(var4, (Object)null, var14.toArray((Enum[])((Enum[])Array.newInstance(var0, 0))));
+         cleanEnumCache(var0);
+         return var15;
+      } catch (Exception var12) {
+         var12.printStackTrace();
+         throw new RuntimeException(var12.getMessage(), var12);
+      }
+   }
 }
