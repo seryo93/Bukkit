@@ -39,7 +39,11 @@ public enum InventoryType {
      * The creative mode inventory, with only 9 QUICKBAR slots and nothing else. (The actual
      * creative interface with the items is client-side and cannot be altered by the server.)
      */
-    CREATIVE(9,"Creative");
+    CREATIVE(9,"Creative"),
+	/**
+	 *
+	 */
+    MOD(0,"Mod Inventory");
     private final int size;
     private final String title;
 

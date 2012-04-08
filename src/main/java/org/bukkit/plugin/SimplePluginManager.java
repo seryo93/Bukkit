@@ -37,11 +37,11 @@ import com.google.common.collect.ImmutableSet;
 /**
  * Handles all plugin management from the Server
  */
-public final class SimplePluginManager implements PluginManager {
+public class SimplePluginManager implements PluginManager {
     private final Server server;
     private final Map<Pattern, PluginLoader> fileAssociations = new HashMap<Pattern, PluginLoader>();
-    private final List<Plugin> plugins = new ArrayList<Plugin>();
-    private final Map<String, Plugin> lookupNames = new HashMap<String, Plugin>();
+    protected final List<Plugin> plugins = new ArrayList<Plugin>();
+    protected final Map<String, Plugin> lookupNames = new HashMap<String, Plugin>();
     private static File updateDirectory = null;
     private final SimpleCommandMap commandMap;
     private final Map<String, Permission> permissions = new HashMap<String, Permission>();
@@ -110,8 +110,9 @@ public final class SimplePluginManager implements PluginManager {
             updateDirectory = new File(directory, server.getUpdateFolder());
         }
 
-        Map<String, File> plugins = new HashMap<String, File>();
+        Map<String, File> plugins = prePopulatePluginList();
         Set<String> loadedPlugins = new HashSet<String>();
+        loadedPlugins.addAll(plugins.keySet());
         Map<String, Collection<String>> dependencies = new HashMap<String, Collection<String>>();
         Map<String, Collection<String>> softDependencies = new HashMap<String, Collection<String>>();
 
@@ -276,6 +277,10 @@ public final class SimplePluginManager implements PluginManager {
 
         return result.toArray(new Plugin[result.size()]);
     }
+
+	protected Map<String, File> prePopulatePluginList() {
+		return new HashMap<String, File>();
+	}
 
     /**
      * Loads the plugin in the specified file
