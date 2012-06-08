@@ -1,6 +1,7 @@
 package org.bukkit;
 
 import java.io.File;
+
 import org.bukkit.generator.ChunkGenerator;
 import java.util.Collection;
 import java.util.HashMap;
@@ -984,5 +985,9 @@ public interface World extends PluginMessageRecipient, Metadatable {
                 lookup.put(env.getId(), env);
             }
         }
+
+		public static void registerEnvironment(Environment env) {
+			lookup.put(env.getId(),env);
+		}
     }
 }
