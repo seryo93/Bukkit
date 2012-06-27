@@ -19,8 +19,8 @@ public class ReloadCommand extends BukkitCommand {
     public boolean execute(CommandSender sender, String currentAlias, String[] args) {
         if (!testPermission(sender)) return true;
 
-        Bukkit.reload();
-        sender.sendMessage(ChatColor.GREEN + "Reload complete.");
+//        Bukkit.reload();
+        sender.sendMessage(ChatColor.GREEN + "Reload not allowed on a forge bukkit server.");
 
         return true;
     }
