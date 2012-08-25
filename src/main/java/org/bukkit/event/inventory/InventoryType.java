@@ -40,6 +40,14 @@ public enum InventoryType {
      * creative interface with the items is client-side and cannot be altered by the server.)
      */
     CREATIVE(9,"Creative"),
+    /**
+     * The merchant inventory, with 2 TRADE-IN slots, and 1 RESULT slot.
+     */
+    MERCHANT(3,"Villager"),
+    /**
+     * The ender chest inventory, with 27 slots.
+     */
+    ENDER_CHEST(27,"Ender Chest"),
 	/**
 	 *
 	 */
