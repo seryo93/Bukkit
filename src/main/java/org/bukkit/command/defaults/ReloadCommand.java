@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.CustomTimingsHandler;
 
 public class ReloadCommand extends BukkitCommand {
     public ReloadCommand(String name) {
@@ -18,10 +19,11 @@ public class ReloadCommand extends BukkitCommand {
 
     @Override
     public boolean execute(CommandSender sender, String currentAlias, String[] args) {
-        if (!testPermission(sender)) return true;
-
         // MCPC+ - disable
         /*
+        if (!testPermission(sender)) return true;
+
+        CustomTimingsHandler.reload(); // Spigot
         Bukkit.reload();
         Command.broadcastCommandMessage(sender, ChatColor.GREEN + "Reload complete.");
         */
