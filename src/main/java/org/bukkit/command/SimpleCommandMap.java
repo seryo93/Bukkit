@@ -17,6 +17,10 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.Server;
 import org.bukkit.command.defaults.*;
 import org.bukkit.util.StringUtil;
+// MCPC+ start
+import org.bukkit.craftbukkit.entity.CraftPlayer;
+import cpw.mods.fml.common.FMLCommonHandler;
+// MCPC+ end
 
 public class SimpleCommandMap implements CommandMap {
     private static final Pattern PATTERN_ON_SPACE = Pattern.compile(" ", Pattern.LITERAL);
@@ -180,10 +184,18 @@ public class SimpleCommandMap implements CommandMap {
         if (target == null) {
             return false;
         }
-
         try {
-            // Note: we don't return the result of target.execute as thats success / failure, we return handled (true) or not handled (false)
-            target.execute(sender, sentCommandLabel, Arrays_copyOfRange(args, 1, args.length));
+            // MCPC+ start - if command is a mod command, check permissions and route through vanilla
+            if (target instanceof CommandModCustom)
+            {
+                if (!target.testPermission(sender)) return true;
+                FMLCommonHandler.instance().getMinecraftServerInstance().getCommandManager().executeCommand(((CraftPlayer)sender).getHandle(), commandLine);
+            }
+            else {
+            // MCPC+ end
+                // Note: we don't return the result of target.execute as thats success / failure, we return handled (true) or not handled (false)
+                target.execute(sender, sentCommandLabel, Arrays_copyOfRange(args, 1, args.length));
+            }
         } catch (CommandException ex) {
             throw ex;
         } catch (Throwable ex) {
