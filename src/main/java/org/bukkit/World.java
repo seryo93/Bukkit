@@ -1104,6 +1104,12 @@ public interface World extends PluginMessageRecipient, Metadatable {
             return lookup.get(id);
         }
 
+        // MCPC+ start - allow forge to register environments
+        public static void registerEnvironment(Environment env) {
+            lookup.put(env.getId(),env);
+        }
+        // MCPC+ end
+
         static {
             for (Environment env : values()) {
                 lookup.put(env.getId(), env);
