@@ -20,8 +20,13 @@ public class ReloadCommand extends BukkitCommand {
     public boolean execute(CommandSender sender, String currentAlias, String[] args) {
         if (!testPermission(sender)) return true;
 
+        // MCPC+ - disable
+        /*
         Bukkit.reload();
         Command.broadcastCommandMessage(sender, ChatColor.GREEN + "Reload complete.");
+        */
+        sender.sendMessage(ChatColor.RED + "Reload not allowed on an MCPC+ server.");
+        // MCPC+ end
 
         return true;
     }
