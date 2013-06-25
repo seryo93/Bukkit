@@ -17,7 +17,7 @@ public class CustomTimingsHandler
 {
 
     private static final Collection<CustomTimingsHandler> ALL_HANDLERS = new HashSet<CustomTimingsHandler>();
-    private static CustomTimingsHandler[] BAKED_HANDLERS;
+    private static CustomTimingsHandler[] BAKED_HANDLERS = { }; // MCPC+ - initialize
     /*========================================================================*/
     private final String name;
     private final CustomTimingsHandler parent;
