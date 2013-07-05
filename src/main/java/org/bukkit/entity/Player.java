@@ -23,6 +23,7 @@ import org.bukkit.scoreboard.Scoreboard;
  * Represents a player, connected or not
  */
 public interface Player extends HumanEntity, Conversable, CommandSender, OfflinePlayer, PluginMessageRecipient {
+
     /**
      * Gets the "friendly" name to display of this player. This may include color.
      * <p>

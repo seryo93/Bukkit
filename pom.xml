@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>za.co.mcportcentral</groupId>
     <artifactId>mcpc-api</artifactId>
-    <version>1.5.2-R1.1-SNAPSHOT</version>
+    <version>1.6.1-R0.1</version>
     <name>MCPC-API</name>
     <url>https://github.com/MinecraftPortCentral/Bukkit</url>
 
@@ -28,8 +28,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>2.0.2</version>
                 <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
+                    <source>1.6</source>
+                    <target>1.6</target>
                 </configuration>
             </plugin>
             <plugin>
